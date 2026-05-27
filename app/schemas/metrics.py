@@ -1,5 +1,5 @@
-from pydantic import BaseModel
-from typing import List
+from pydantic import BaseModel, Field
+from typing import List, Optional
 
 class CpuInfo(BaseModel):
     load_percent: float
@@ -17,6 +17,18 @@ class DiskInfo(BaseModel):
     used_percent: float
     total_gb: float
 
+class GpuInfo(BaseModel):
+    name: str
+    vendor: str
+    load_percent: float = 0.0
+    memory_used_mb: float = 0.0
+    memory_total_mb: float = 0.0
+    temperature_c: Optional[float] = None
+    metrics_available: bool = Field(
+        default=False,
+        description="True if real metrics were successfully retrieved"
+    )
+
 class ProcessInfo(BaseModel):
     pid: int
     name: str
@@ -28,3 +40,4 @@ class DashboardResponse(BaseModel):
     cpu: CpuInfo
     ram: RamInfo
     disks: List[DiskInfo]
+    gpus: List[GpuInfo] = []

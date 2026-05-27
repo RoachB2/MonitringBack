@@ -6,6 +6,7 @@ from sqlalchemy import select
 from app.db.database import AsyncSessionLocal
 from app.db.models import User
 from app.schemas.metrics import DashboardResponse
+from app.services import monitor
 from app.services.monitor import MonitorService
 from app.core.security import verify_token, create_access_token, verify_password
 from typing import Optional
@@ -41,7 +42,8 @@ def get_dashboard(user = Depends(verify_token)):
     return DashboardResponse(
         cpu=monitor_service.get_cpu_info(),
         ram=monitor_service.get_ram_info(),
-        disks=monitor_service.get_disks_info()
+        disks=monitor_service.get_disks_info(),
+        gpus=monitor_service.get_gpu_info()
     )
 
 # Процессы

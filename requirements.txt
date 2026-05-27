@@ -7,3 +7,5 @@ python-multipart
 bcrypt
 aiosqlite
 sqlalchemy
+pydantic-settings
+wmi
