@@ -41,14 +41,14 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSessi
         "access_token": token,
         "refresh_token":refresh_token,
         "token_type": "bearer",
-        "expires_in": timedelta(microseconds=settings.ACCESS_TOKEN_EXPIRE_MINUTES)}
+        "expires_in": int(timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES).total_seconds())}
 
 # Обновление токена
 @router.post("/refresh")
 async def refresh(payload: dict = Depends(get_current_refresh_payload)):
     user_id = payload.get("sub")
     new_access = create_access_token(data={"sub": user_id, "role": payload.get("role")})
-    new_refresh = create_refresh_token(data={"sub": user_id})
+    new_refresh = create_refresh_token(data={"sub": user_id, "role": payload.get("role")})
     if user_id is None:
         raise HTTPException(status_code=401, detail="Invalid token payload")
     return {
@@ -93,7 +93,28 @@ async def get_dashboard(user = Depends(get_current_access_payload)):
         disks=monitor_service.get_disks_info(),
         gpus=monitor_service.get_gpu_info()
     )
+@router.get("/dashboard/cpu")
+async def get_dashboard_cpu(user = Depends(get_current_access_payload)):
+    return DashboardResponse(
+        cpu=monitor_service.get_cpu_info()
+    )
 
+@router.get("/dashboard/ram")
+async def get_dashboard_ram(user = Depends(get_current_access_payload)):
+    return DashboardResponse(
+        ram=monitor_service.get_ram_info()
+    )
+
+@router.get("/dashboard/disks")
+async def get_dashboard_disks(user = Depends(get_current_access_payload)):
+    return DashboardResponse(
+        disks=monitor_service.get_disks_info()
+    )
+@router.get("/dashboard/gpu")
+async def get_dashboard_gpu(user = Depends(get_current_access_payload)):
+    return DashboardResponse(
+        gpus=monitor_service.get_gpu_info()
+    )
 # Процессы
 @router.get("/processes")
 async def get_processes(name: Optional[str] = None,
@@ -101,13 +122,17 @@ async def get_processes(name: Optional[str] = None,
     token_payload = Depends(get_current_access_payload)):
     return monitor_service.get_processes(name_filter=name, user_filter=user)
 
+@router.get("/processes/detail")
+async def get_processes(name: Optional[str] = None, user: Optional[str] = None,
+    token_payload = Depends(get_current_access_payload)):
+    pass
+
 async def get_current_admin(user = Depends(get_current_access_payload)):
     if user.get('role') != 'admin':
         raise HTTPException(status_code=403, detail="Action requires admin privileges")
     return user
 
 # Убить процесс
-@router.post("/process/{pid}/kill")
 @router.post("/process/{pid}/kill")
 async def kill_process(pid: int, user=Depends(get_current_admin)):
     try:

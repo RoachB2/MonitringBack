@@ -15,7 +15,8 @@ class MonitorService:
         return CpuInfo(
             load_percent=load,
             core_count=cores,
-            frequency_mhz=freq
+            frequency_mhz=freq,
+            temperature_c=0
         )
 
     def get_ram_info(self) -> RamInfo:
@@ -35,7 +36,8 @@ class MonitorService:
                     device=part.device,
                     mount_point=part.mountpoint,
                     used_percent=usage.percent,
-                    total_gb=round(usage.total / (1024 ** 3), 2)
+                    total_gb=round(usage.total / (1024 ** 3), 2),
+                    temperature_c=0
                 ))
             except PermissionError:
                 continue

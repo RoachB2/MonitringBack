@@ -5,6 +5,7 @@ class CpuInfo(BaseModel):
     load_percent: float
     core_count: int
     frequency_mhz: float
+    temperature_c: float
 
 class RamInfo(BaseModel):
     load_percent: float
@@ -14,6 +15,7 @@ class RamInfo(BaseModel):
 class DiskInfo(BaseModel):
     device: str
     mount_point: str
+    temperature_c: float
     used_percent: float
     total_gb: float
 
