@@ -5,19 +5,30 @@ class CpuInfo(BaseModel):
     load_percent: float
     core_count: int
     frequency_mhz: float
-    temperature_c: float
+    temperature_c: float = 0.0
+    used_percent: float = 0.0
+    total_gb: float = 0.0
 
 class RamInfo(BaseModel):
     load_percent: float
     used_gb: float
     total_gb: float
 
-class DiskInfo(BaseModel):
+class DiskPartitionInfo(BaseModel):
+    """Информация о конкретном разделе/томе внутри физического диска"""
     device: str
     mount_point: str
-    temperature_c: float
     used_percent: float
     total_gb: float
+
+class DiskInfo(BaseModel):
+    """Информация о физическом диске"""
+    device: str
+    model_name: str  # Основная точка монтирования (первая из списка)
+    temperature_c: Optional[float] = 0.0
+    used_percent: float
+    total_gb: float
+    internals: List[DiskPartitionInfo] = []
 
 class GpuInfo(BaseModel):
     name: str
