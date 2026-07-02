@@ -95,26 +95,19 @@ async def get_dashboard(user = Depends(get_current_access_payload)):
     )
 @router.get("/dashboard/cpu")
 async def get_dashboard_cpu(user = Depends(get_current_access_payload)):
-    return DashboardResponse(
-        cpu=monitor_service.get_cpu_info()
-    )
+    return monitor_service.get_cpu_info()
 
 @router.get("/dashboard/ram")
 async def get_dashboard_ram(user = Depends(get_current_access_payload)):
-    return DashboardResponse(
-        ram=monitor_service.get_ram_info()
-    )
+    return monitor_service.get_ram_info()
 
 @router.get("/dashboard/disks")
 async def get_dashboard_disks(user = Depends(get_current_access_payload)):
-    return DashboardResponse(
-        disks=monitor_service.get_disks_info()
-    )
+    return monitor_service.get_disks_info()
 @router.get("/dashboard/gpu")
 async def get_dashboard_gpu(user = Depends(get_current_access_payload)):
-    return DashboardResponse(
-        gpus=monitor_service.get_gpu_info()
-    )
+    return monitor_service.get_gpu_info()
+
 # Процессы
 @router.get("/processes")
 async def get_processes(name: Optional[str] = None,
