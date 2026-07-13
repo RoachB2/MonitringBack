@@ -4,7 +4,7 @@
 
 **Единая точка управления self-hosted инфраструктурой — мониторинг сервера и управление сервисами с телефона за 5 минут.**
 
-![Tuwunel Dashboard](img/appDashboard.png)
+<img src="img/appDashboard.png" width="300" alt="Tuwunel Dashboard">
 
 </div>
 
